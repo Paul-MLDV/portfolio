@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moldovan — Ingénieur Réseau &amp; Infrastructure</title>
+<meta name="description" content="Portfolio technique — réseau, infrastructure et sécurité des systèmes.">
+<style>@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --ink: #16202B;
+  --ink-soft: #55616C;
+  --muted: #8A929A;
+  --accent: #1F6F5C;
+  --line: #E3E5E1;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --max: 820px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0 0 .5em;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+h1 { font-size: 2.7rem; font-weight: 700; }
+h2 { font-size: 1.35rem; }
+p { margin: 0 0 1em; color: var(--ink-soft); }
+.mono, code { font-family: var(--font-mono); font-size: .9em; }
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+header.site {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(250,250,248,.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.nav-row {
+  max-width: var(--max); margin: 0 auto; padding: 16px 28px;
+  display: flex; align-items: baseline; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px;
+}
+.nav-row .name {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 1.05rem; color: var(--ink); letter-spacing: .02em;
+}
+.nav-row .name span { color: var(--accent); }
+nav.links { display: flex; gap: 22px; font-size: .93rem; }
+nav.links a {
+  color: var(--ink-soft); padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+  transition: color .2s ease, border-color .2s ease;
+}
+nav.links a:hover { color: var(--ink); border-bottom-color: var(--accent); }
+
+.hero { padding: 88px 0 40px; }
+.hero .eyebrow {
+  font-family: var(--font-mono); font-size: .84rem;
+  color: var(--muted); margin-bottom: 16px;
+}
+.hero .lede { font-size: 1.16rem; max-width: 58ch; }
+
+.topology { width: 100%; height: auto; margin: 44px 0 0; display: block; }
+.topology .edge {
+  stroke: var(--line); stroke-width: 1.5; fill: none;
+  stroke-dasharray: 200; stroke-dashoffset: 200;
+  animation: draw 1s ease forwards;
+}
+.topology .node { fill: var(--surface); stroke: var(--accent); stroke-width: 1.5; opacity: 0; animation: pop .5s ease forwards; }
+.topology .core { fill: var(--ink); opacity: 0; animation: pop .6s ease forwards; }
+.topology .lbl { font-family: var(--font-mono); font-size: 12px; fill: var(--ink-soft); opacity: 0; animation: fade .6s ease forwards; }
+.topology .core-lbl { font-family: var(--font-display); font-weight: 600; font-size: 13px; fill: var(--bg); opacity: 0; animation: fade .6s .2s ease forwards; }
+.topology .node, .topology .core { transform-box: fill-box; transform-origin: center; }
+
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes pop { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: scale(1); } }
+@keyframes fade { to { opacity: 1; } }
+
+.rise { opacity: 0; transform: translateY(14px); animation: rise .7s cubic-bezier(.2,.7,.3,1) forwards; }
+@keyframes rise { to { opacity: 1; transform: none; } }
+.d1 { animation-delay: .05s; } .d2 { animation-delay: .16s; } .d3 { animation-delay: .28s; }
+
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+
+section { padding: 52px 0; }
+section.bordered { border-top: 1px solid var(--line); }
+
+.skills { display: grid; grid-template-columns: 1fr 1fr; gap: 34px 40px; margin-top: 28px; }
+.skill h3 {
+  font-family: var(--font-mono); font-size: .9rem; font-weight: 500;
+  color: var(--accent); margin-bottom: 10px;
+}
+.skill ul { margin: 0; padding: 0; list-style: none; font-size: .96rem; color: var(--ink-soft); }
+.skill li { padding: 2px 0; }
+
+.projects { margin-top: 28px; border-top: 1px solid var(--line); }
+.project-card {
+  display: block; position: relative;
+  padding: 26px 4px 26px 22px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  transition: padding-left .35s cubic-bezier(.2,.7,.3,1);
+}
+.project-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: var(--accent); transform: scaleY(0); transform-origin: top;
+  transition: transform .35s cubic-bezier(.2,.7,.3,1);
+}
+.project-card:hover { padding-left: 30px; }
+.project-card:hover::before, .project-card:focus-visible::before { transform: scaleY(1); }
+.project-card .top { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.project-card h3 { font-size: 1.18rem; margin: 0; }
+.project-card .tag { font-family: var(--font-mono); font-size: .78rem; color: var(--muted); }
+.project-card p { margin: 8px 0 0; font-size: .96rem; }
+.stack { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 7px; }
+.pill {
+  font-family: var(--font-mono); font-size: .75rem; color: var(--ink-soft);
+  border: 1px solid var(--line); padding: 3px 9px; border-radius: 2px;
+  background: var(--surface);
+}
+
+.timeline { list-style: none; margin: 28px 0 0; padding: 0 0 0 22px; border-left: 1px solid var(--line); }
+.timeline li { position: relative; padding-bottom: 24px; }
+.timeline li::before {
+  content: ''; position: absolute; left: -27px; top: 8px;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--bg); border: 2px solid var(--accent);
+}
+.timeline .when { font-family: var(--font-mono); font-size: .82rem; color: var(--muted); display: block; }
+.timeline .what { color: var(--ink); }
+
+.project-header { padding: 60px 0 32px; border-bottom: 1px solid var(--line); }
+.back {
+  font-family: var(--font-mono); font-size: .85rem;
+  display: inline-block; margin-bottom: 24px;
+  transition: transform .25s ease;
+}
+.back:hover { transform: translateX(-4px); }
+.meta { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 20px; }
+
+.body { padding: 44px 0 8px; }
+.body dt {
+  font-family: var(--font-mono); font-size: .82rem; color: var(--accent);
+  margin: 40px 0 10px;
+}
+.body dt:first-of-type { margin-top: 0; }
+.body dd { margin: 0; color: var(--ink-soft); }
+.body dd ul { margin: 0; padding-left: 20px; }
+.body dd li { margin-bottom: 7px; }
+
+.note {
+  border: 1px solid var(--line); border-left: 2px solid var(--accent);
+  background: var(--surface); padding: 18px 20px; font-size: .93rem;
+}
+.note p:last-child { margin-bottom: 0; }
+.note strong { color: var(--ink); }
+
+footer.site { border-top: 1px solid var(--line); padding: 44px 0 56px; margin-top: 44px; }
+.contact { display: flex; gap: 26px; flex-wrap: wrap; font-family: var(--font-mono); font-size: .9rem; }
+.contact a { position: relative; padding-bottom: 3px; }
+.contact a::after {
+  content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px;
+  background: var(--accent); transform: scaleX(0); transform-origin: left;
+  transition: transform .3s cubic-bezier(.2,.7,.3,1);
+}
+.contact a:hover::after { transform: scaleX(1); }
+.fineprint { margin-top: 22px; font-size: .82rem; color: var(--muted); }
+
+@media (max-width: 640px) {
+  h1 { font-size: 2.05rem; }
+  .skills { grid-template-columns: 1fr; gap: 28px; }
+  .nav-row { flex-direction: column; align-items: flex-start; }
+  .hero { padding: 56px 0 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001s !important;
+    animation-delay: 0s !important;
+    transition-duration: .001s !important;
+  }
+  .rise, .reveal { opacity: 1 !important; transform: none !important; }
+  .topology .edge { stroke-dashoffset: 0 !important; }
+  .topology .node, .topology .core, .topology .lbl, .topology .core-lbl { opacity: 1 !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a href="index.html" class="name">MOLDOVAN<span>.</span></a>
+    <nav class="links">
+      <a href="#competences">Compétences</a>
+      <a href="#projets">Projets</a>
+      <a href="#parcours">Parcours</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="eyebrow rise d1">réseau · infrastructure · sécurité des systèmes</div>
+    <h1 class="rise d2">Ingénieur Réseau<br>&amp; Infrastructure</h1>
+    <p class="lede rise d3">
+      Je conçois, déploie et supervise des infrastructures réseau. Chaque projet est
+      documenté comme il a été construit : par le problème rencontré, pas seulement
+      par le résultat final.
+    </p>
+
+    <svg class="topology" viewBox="0 0 700 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schéma reliant les domaines de compétences au cœur réseau et infrastructure">
+      <line class="edge" style="animation-delay:.35s" x1="350" y1="165" x2="350" y2="42"></line>
+      <line class="edge" style="animation-delay:.45s" x1="350" y1="165" x2="467" y2="127"></line>
+      <line class="edge" style="animation-delay:.55s" x1="350" y1="165" x2="422" y2="265"></line>
+      <line class="edge" style="animation-delay:.65s" x1="350" y1="165" x2="278" y2="265"></line>
+      <line class="edge" style="animation-delay:.75s" x1="350" y1="165" x2="233" y2="127"></line>
+
+      <circle class="node" style="animation-delay:.9s" cx="350" cy="42" r="6"></circle>
+      <circle class="node" style="animation-delay:1s" cx="467" cy="127" r="6"></circle>
+      <circle class="node" style="animation-delay:1.1s" cx="422" cy="265" r="6"></circle>
+      <circle class="node" style="animation-delay:1.2s" cx="278" cy="265" r="6"></circle>
+      <circle class="node" style="animation-delay:1.3s" cx="233" cy="127" r="6"></circle>
+
+      <text class="lbl" style="animation-delay:1s" x="350" y="26" text-anchor="middle">Meraki / MikroTik</text>
+      <text class="lbl" style="animation-delay:1.1s" x="480" y="124" text-anchor="start">Prometheus &amp; Grafana</text>
+      <text class="lbl" style="animation-delay:1.2s" x="434" y="272" text-anchor="start">Graylog &amp; conformité</text>
+      <text class="lbl" style="animation-delay:1.3s" x="266" y="272" text-anchor="end">Teltonika</text>
+      <text class="lbl" style="animation-delay:1.4s" x="220" y="124" text-anchor="end">Linux</text>
+
+      <circle class="core" style="animation-delay:.15s" cx="350" cy="165" r="33"></circle>
+      <text class="core-lbl" x="350" y="162" text-anchor="middle">Réseau et</text>
+      <text class="core-lbl" x="350" y="178" text-anchor="middle">Système</text>
+    </svg>
+  </section>
+
+  <section id="competences" class="bordered reveal">
+    <h2>Compétences</h2>
+    <div class="skills">
+      <div class="skill">
+        <h3>réseau &amp; infrastructure</h3>
+        <ul>
+          <li>Cisco Meraki MX / MS / MR, AutoVPN</li>
+          <li>MikroTik RouterOS, VLAN, firewall</li>
+          <li>Linux, virtualisation Proxmox</li>
+        </ul>
+      </div>
+      <div class="skill">
+        <h3>supervision</h3>
+        <ul>
+          <li>Prometheus, Grafana, Alertmanager</li>
+          <li>Blackbox Exporter, SNMP Exporter</li>
+          <li>Alerting automatisé</li>
+        </ul>
+      </div>
+      <div class="skill">
+        <h3>journalisation &amp; conformité</h3>
+        <ul>
+          <li>Graylog, OpenSearch, MinIO (WORM)</li>
+          <li>RGPD, NIS2, ANSSI PA-073</li>
+          <li>RBAC, archivage réglementaire</li>
+        </ul>
+      </div>
+      <div class="skill">
+        <h3>automatisation</h3>
+        <ul>
+          <li>Python (SDK Meraki, openpyxl)</li>
+          <li>Bash, JavaScript</li>
+          <li>Outils internes de provisioning (CLI et interface web)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="projets" class="bordered reveal">
+    <h2>Projets</h2>
+    <div class="projects">
+
+      <a class="project-card" href="projects/journalisation-legale.html">
+        <div class="top">
+          <h3>Journalisation légale des logs réseau</h3>
+          <span class="tag">conformité</span>
+        </div>
+        <p>Archivage inaltérable des logs réseau, conçu pour répondre aux exigences RGPD, NIS2 et ANSSI.</p>
+        <div class="stack">
+          <span class="pill">Graylog</span>
+          <span class="pill">OpenSearch</span>
+          <span class="pill">MinIO</span>
+        </div>
+      </a>
+
+      <a class="project-card" href="projects/infra-multisite.html">
+        <div class="top">
+          <h3>Migration réseau multi-boutiques</h3>
+          <span class="tag">réseau</span>
+        </div>
+        <p>Bascule progressive de plusieurs boutiques vers une infrastructure Meraki unifiée, sans interruption d'activité.</p>
+        <div class="stack">
+          <span class="pill">Meraki MX/MS/MR</span>
+          <span class="pill">Teltonika</span>
+          <span class="pill">AutoVPN</span>
+        </div>
+      </a>
+
+      <a class="project-card" href="projects/supervision-stack.html">
+        <div class="top">
+          <h3>Stack de supervision temps réel</h3>
+          <span class="tag">supervision</span>
+        </div>
+        <p>Monitoring de passerelles réseau avec détection proactive des pannes et alerting automatique.</p>
+        <div class="stack">
+          <span class="pill">Prometheus</span>
+          <span class="pill">Grafana</span>
+          <span class="pill">Alertmanager</span>
+        </div>
+      </a>
+
+      <a class="project-card" href="projects/meraki-automation.html">
+        <div class="top">
+          <h3>Automatisation Meraki : du script à l'interface web</h3>
+          <span class="tag">automatisation</span>
+        </div>
+        <p>Outil de provisioning réseau parti d'un script en ligne de commande, devenu une application web locale à tableau éditable.</p>
+        <div class="stack">
+          <span class="pill">Python</span>
+          <span class="pill">Meraki SDK</span>
+          <span class="pill">Interface web locale</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <section id="parcours" class="bordered reveal">
+    <h2>Parcours</h2>
+    <ul class="timeline">
+      <li>
+        <span class="when">2024 — 2026</span>
+        <span class="what">Master 2 CNS, spécialité Systèmes et Réseaux, Université d'Évry Paris-Saclay</span>
+      </li>
+      <li>
+        <span class="when">Février — juillet 2026</span>
+        <span class="what">Stage ingénieur réseau chez Leonix Events — connectivité IT événementielle, intégration Cisco Meraki</span>
+      </li>
+      <li>
+        <span class="when">En parallèle</span>
+        <span class="what">Activité freelance via LinkWave Service — poursuite de missions telecom et architecture réseau avec Leonix Events</span>
+      </li>
+      <li>
+        <span class="when">En cours</span>
+        <span class="what">Recherche d'un premier CDI Ingénieur Réseau / Infrastructure</span>
+      </li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="site" id="contact">
+  <div class="wrap">
+    <h2>Contact</h2>
+    <div class="contact">
+      <a href="mailto:ps.moldovan18@gmail.com">ps.moldovan18@gmail.com</a>
+      <a href="https://www.linkedin.com/in/paul-moldovan-4a70682a4/">linkedin.com/in/paul-moldovan</a>
+      <a href="https://github.com/Paul-MLDV">github.com/Paul-MLDV</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function (el) { el.classList.add('in'); });
+    return;
+  }
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function (el) { obs.observe(el); });
+})();
+</script>
+
+</body>
+</html>

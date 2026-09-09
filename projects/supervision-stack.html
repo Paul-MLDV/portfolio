@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stack de supervision temps réel — Moldovan</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --ink: #16202B;
+  --ink-soft: #55616C;
+  --muted: #8A929A;
+  --accent: #1F6F5C;
+  --line: #E3E5E1;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --max: 820px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0 0 .5em;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+h1 { font-size: 2.7rem; font-weight: 700; }
+h2 { font-size: 1.35rem; }
+p { margin: 0 0 1em; color: var(--ink-soft); }
+.mono, code { font-family: var(--font-mono); font-size: .9em; }
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+header.site {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(250,250,248,.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.nav-row {
+  max-width: var(--max); margin: 0 auto; padding: 16px 28px;
+  display: flex; align-items: baseline; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px;
+}
+.nav-row .name {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 1.05rem; color: var(--ink); letter-spacing: .02em;
+}
+.nav-row .name span { color: var(--accent); }
+nav.links { display: flex; gap: 22px; font-size: .93rem; }
+nav.links a {
+  color: var(--ink-soft); padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+  transition: color .2s ease, border-color .2s ease;
+}
+nav.links a:hover { color: var(--ink); border-bottom-color: var(--accent); }
+
+.hero { padding: 88px 0 40px; }
+.hero .eyebrow {
+  font-family: var(--font-mono); font-size: .84rem;
+  color: var(--muted); margin-bottom: 16px;
+}
+.hero .lede { font-size: 1.16rem; max-width: 58ch; }
+
+.topology { width: 100%; height: auto; margin: 44px 0 0; display: block; }
+.topology .edge {
+  stroke: var(--line); stroke-width: 1.5; fill: none;
+  stroke-dasharray: 200; stroke-dashoffset: 200;
+  animation: draw 1s ease forwards;
+}
+.topology .node { fill: var(--surface); stroke: var(--accent); stroke-width: 1.5; opacity: 0; animation: pop .5s ease forwards; }
+.topology .core { fill: var(--ink); opacity: 0; animation: pop .6s ease forwards; }
+.topology .lbl { font-family: var(--font-mono); font-size: 12px; fill: var(--ink-soft); opacity: 0; animation: fade .6s ease forwards; }
+.topology .core-lbl { font-family: var(--font-display); font-weight: 600; font-size: 13px; fill: var(--bg); opacity: 0; animation: fade .6s .2s ease forwards; }
+.topology .node, .topology .core { transform-box: fill-box; transform-origin: center; }
+
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes pop { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: scale(1); } }
+@keyframes fade { to { opacity: 1; } }
+
+.rise { opacity: 0; transform: translateY(14px); animation: rise .7s cubic-bezier(.2,.7,.3,1) forwards; }
+@keyframes rise { to { opacity: 1; transform: none; } }
+.d1 { animation-delay: .05s; } .d2 { animation-delay: .16s; } .d3 { animation-delay: .28s; }
+
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+
+section { padding: 52px 0; }
+section.bordered { border-top: 1px solid var(--line); }
+
+.skills { display: grid; grid-template-columns: 1fr 1fr; gap: 34px 40px; margin-top: 28px; }
+.skill h3 {
+  font-family: var(--font-mono); font-size: .9rem; font-weight: 500;
+  color: var(--accent); margin-bottom: 10px;
+}
+.skill ul { margin: 0; padding: 0; list-style: none; font-size: .96rem; color: var(--ink-soft); }
+.skill li { padding: 2px 0; }
+
+.projects { margin-top: 28px; border-top: 1px solid var(--line); }
+.project-card {
+  display: block; position: relative;
+  padding: 26px 4px 26px 22px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  transition: padding-left .35s cubic-bezier(.2,.7,.3,1);
+}
+.project-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: var(--accent); transform: scaleY(0); transform-origin: top;
+  transition: transform .35s cubic-bezier(.2,.7,.3,1);
+}
+.project-card:hover { padding-left: 30px; }
+.project-card:hover::before, .project-card:focus-visible::before { transform: scaleY(1); }
+.project-card .top { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.project-card h3 { font-size: 1.18rem; margin: 0; }
+.project-card .tag { font-family: var(--font-mono); font-size: .78rem; color: var(--muted); }
+.project-card p { margin: 8px 0 0; font-size: .96rem; }
+.stack { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 7px; }
+.pill {
+  font-family: var(--font-mono); font-size: .75rem; color: var(--ink-soft);
+  border: 1px solid var(--line); padding: 3px 9px; border-radius: 2px;
+  background: var(--surface);
+}
+
+.timeline { list-style: none; margin: 28px 0 0; padding: 0 0 0 22px; border-left: 1px solid var(--line); }
+.timeline li { position: relative; padding-bottom: 24px; }
+.timeline li::before {
+  content: ''; position: absolute; left: -27px; top: 8px;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--bg); border: 2px solid var(--accent);
+}
+.timeline .when { font-family: var(--font-mono); font-size: .82rem; color: var(--muted); display: block; }
+.timeline .what { color: var(--ink); }
+
+.project-header { padding: 60px 0 32px; border-bottom: 1px solid var(--line); }
+.back {
+  font-family: var(--font-mono); font-size: .85rem;
+  display: inline-block; margin-bottom: 24px;
+  transition: transform .25s ease;
+}
+.back:hover { transform: translateX(-4px); }
+.meta { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 20px; }
+
+.body { padding: 44px 0 8px; }
+.body dt {
+  font-family: var(--font-mono); font-size: .82rem; color: var(--accent);
+  margin: 40px 0 10px;
+}
+.body dt:first-of-type { margin-top: 0; }
+.body dd { margin: 0; color: var(--ink-soft); }
+.body dd ul { margin: 0; padding-left: 20px; }
+.body dd li { margin-bottom: 7px; }
+
+.note {
+  border: 1px solid var(--line); border-left: 2px solid var(--accent);
+  background: var(--surface); padding: 18px 20px; font-size: .93rem;
+}
+.note p:last-child { margin-bottom: 0; }
+.note strong { color: var(--ink); }
+
+footer.site { border-top: 1px solid var(--line); padding: 44px 0 56px; margin-top: 44px; }
+.contact { display: flex; gap: 26px; flex-wrap: wrap; font-family: var(--font-mono); font-size: .9rem; }
+.contact a { position: relative; padding-bottom: 3px; }
+.contact a::after {
+  content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px;
+  background: var(--accent); transform: scaleX(0); transform-origin: left;
+  transition: transform .3s cubic-bezier(.2,.7,.3,1);
+}
+.contact a:hover::after { transform: scaleX(1); }
+.fineprint { margin-top: 22px; font-size: .82rem; color: var(--muted); }
+
+@media (max-width: 640px) {
+  h1 { font-size: 2.05rem; }
+  .skills { grid-template-columns: 1fr; gap: 28px; }
+  .nav-row { flex-direction: column; align-items: flex-start; }
+  .hero { padding: 56px 0 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001s !important;
+    animation-delay: 0s !important;
+    transition-duration: .001s !important;
+  }
+  .rise, .reveal { opacity: 1 !important; transform: none !important; }
+  .topology .edge { stroke-dashoffset: 0 !important; }
+  .topology .node, .topology .core, .topology .lbl, .topology .core-lbl { opacity: 1 !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a href="../index.html" class="name">MOLDOVAN<span>.</span></a>
+    <nav class="links">
+      <a href="../index.html#competences">Compétences</a>
+      <a href="../index.html#projets">Projets</a>
+      <a href="../index.html#parcours">Parcours</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="project-header">
+    <a class="back rise d1" href="../index.html#projets">← retour aux projets</a>
+    <h1 class="rise d2">Stack de supervision<br>temps réel</h1>
+    <p class="lede rise d3">Une supervision complète pour ne plus découvrir une panne de passerelle par un appel client.</p>
+    <div class="meta rise d3">
+      <span class="pill">Prometheus</span>
+      <span class="pill">Grafana</span>
+      <span class="pill">Alertmanager</span>
+      <span class="pill">Blackbox Exporter</span>
+      <span class="pill">SNMP Exporter</span>
+      <span class="pill">Proxmox</span>
+    </div>
+  </div>
+
+  <dl class="body">
+    <div class="reveal">
+      <dt>Contexte</dt>
+      <dd><p>Des passerelles réseau déployées sur différents sites événementiels devaient rester joignables en continu, sans que l'équipe dispose d'une visibilité centralisée sur leur état.</p></dd>
+    </div>
+
+    <div class="reveal">
+      <dt>Problème</dt>
+      <dd><p>Sans supervision, une panne n'était détectée qu'au moment où elle causait un impact visible sur site — trop tard pour intervenir de façon préventive.</p></dd>
+    </div>
+
+    <div class="reveal">
+      <dt>Solution</dt>
+      <dd>
+        <p>Déploiement d'une stack complète sur une VM Ubuntu hébergée sur Proxmox :</p>
+        <ul>
+          <li>Prometheus pour la collecte de métriques</li>
+          <li>Blackbox Exporter pour les contrôles de disponibilité (ping / HTTP)</li>
+          <li>SNMP Exporter pour les métriques des équipements réseau</li>
+          <li>Grafana pour la visualisation</li>
+          <li>Alertmanager pour le routage des alertes, avec notification automatique vers l'équipe</li>
+        </ul>
+        <p>La stack surveille 14 adresses IP de passerelles réparties sur 7 paires de sites.</p>
+      </dd>
+    </div>
+
+    <div class="reveal">
+      <dt>Résultat</dt>
+      <dd><p>Détection proactive des pannes, avec remontée automatique avant qu'un incident ne devienne visible côté client.</p></dd>
+    </div>
+  </dl>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <h2>Contact</h2>
+    <div class="contact">
+      <a href="mailto:ps.moldovan18@gmail.com">ps.moldovan18@gmail.com</a>
+      <a href="https://www.linkedin.com/in/paul-moldovan-4a70682a4/">linkedin.com/in/paul-moldovan</a>
+      <a href="https://github.com/Paul-MLDV">github.com/Paul-MLDV</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function (el) { el.classList.add('in'); });
+    return;
+  }
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function (el) { obs.observe(el); });
+})();
+</script>
+
+</body>
+</html>
